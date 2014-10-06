@@ -4,7 +4,7 @@ public class DataTypes {
 
 	public static void main(String[] args) {
 		
-		double doubVar = 10.0;
+		double doubVar = 10.0; 
 		System.out.println("Double: " + doubVar);
 		System.out.println('\n');
 		
@@ -78,7 +78,6 @@ public class DataTypes {
 		double doubVar2 = 4.99;
 		int intDoub = (int) doubVar2;
 		System.out.println("Double 4.99 converted to int = " + intDoub);
-		
 		
 	}
 
