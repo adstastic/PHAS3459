@@ -25,9 +25,12 @@ public class TestThreeVector {
 	System.out.println("v1 x v2 = "+ThreeVector.vectorProduct(v1, v2));
 	System.out.println();
 	
-	// Print angles
-	System.out.println("Angle between v1 and v2 = "+ThreeVector.angle(v1, v2)+" radians");
-	System.out.println("Angle between v1 and v3 = "+ThreeVector.angle(v1, v3)+" radians");
+	// Calculate angles and assign to variables
+	double angle1 = ThreeVector.angle(v1, v2);
+	double angle2 = ThreeVector.angle(v1, v3);
+	// Print just "NaN" if angle is NaN or print 'angle+"radians"' if angle is not NaN
+	System.out.println("Angle between v1 and v3 = "+(Double.isNaN(angle1) ? angle1 : angle1+" radians"));
+	System.out.println("Angle between v1 and v3 = "+(Double.isNaN(angle2) ? angle2 : angle2+" radians"));
 	System.out.println();
 	
 	// Describing what happens when toString() method is removed from ThreeVector

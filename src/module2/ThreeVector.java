@@ -35,7 +35,7 @@ public class ThreeVector {
 	
 	// toString method to print vector
 	public String toString()	{
-		return xc+","+yc+","+zc;
+		return xc+"i, "+yc+"j, "+zc+"k";
 	}
 	
 	// Magnitude
