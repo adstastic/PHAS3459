@@ -28,7 +28,7 @@ public class TestThreeVector {
 	// Calculate angles and assign to variables
 	double angle1 = ThreeVector.angle(v1, v2);
 	double angle2 = ThreeVector.angle(v1, v3);
-	// Print just "NaN" if angle is NaN or print 'angle+"radians"' if angle is not NaN
+	// If statement to print just "NaN" if angle is NaN or print 'angle+"radians"' if angle is not NaN
 	System.out.println("Angle between v1 and v3 = "+(Double.isNaN(angle1) ? angle1 : angle1+" radians"));
 	System.out.println("Angle between v1 and v3 = "+(Double.isNaN(angle2) ? angle2 : angle2+" radians"));
 	System.out.println();

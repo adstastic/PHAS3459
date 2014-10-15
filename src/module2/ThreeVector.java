@@ -1,7 +1,7 @@
 package module2;
 
 public class ThreeVector {
-	// Components of vector
+	// Instance variables - components of vector
 	private double xc; private double yc; private double zc;
 	// Default constructor
 	public ThreeVector() {}
