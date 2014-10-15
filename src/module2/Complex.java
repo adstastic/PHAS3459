@@ -1,4 +1,5 @@
 package module2;
+//Written by Aditya Mukherjee for PHAS 3459 Module 2
 
 public class Complex {
 	// Instance variables - real and imaginary parts of complex number
@@ -6,7 +7,7 @@ public class Complex {
 	
 	// Class variables - complex numbers equalling: 1, 0, i
 	public static Complex ONE = new Complex(1,0);
-	public static Complex ZERO = new Complex(0,0);
+	public static Complex ZERO = new Complex();
 	public static Complex I = new Complex(0,1);
 	
 	// Constructors - default and accepting arguments of real and imaginary components
@@ -30,7 +31,7 @@ public class Complex {
 		return mod;
 	}
 	
-	// Argument (angle going anticlockwise with Real axis)
+	// Argument (angle going anticlockwise from Real axis)
 	public double angle() {
 		double angle = Math.atan(im/re);
 		return angle;
@@ -61,7 +62,12 @@ public class Complex {
 	
 	// toString() method to enable printing
 	public String toString() {
-		return "z = "+re+" + "+im+"i";
+		if (Double.isNaN(re) && Double.isNaN(im)) {
+			return "Undefined"; 
+		}
+		else {
+			return "z = "+re+" + "+im+"i";
+		}
 	}
 	
 	// Initialise complex number from modulus and argument (magnitude and angle)

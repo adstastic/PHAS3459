@@ -1,4 +1,5 @@
 package module2;
+//Written by Aditya Mukherjee for PHAS 3459 Module 2
 
 public class ThreeVector {
 	// Instance variables - components of vector
@@ -20,7 +21,6 @@ public class ThreeVector {
 	}
 	
 	// Getters for individual components of the vector
-	
 	double getx()	{
 		return xc;
 	}
@@ -35,7 +35,11 @@ public class ThreeVector {
 	
 	// toString method to print vector
 	public String toString()	{
-		return xc+"i, "+yc+"j, "+zc+"k";
+		if (Double.isNaN(xc) && Double.isNaN(yc) && Double.isNaN(zc)) {
+			return "Undefined";
+		} else {
+			return xc+"i, "+yc+"j, "+zc+"k";
+		}
 	}
 	
 	// Magnitude
@@ -52,7 +56,6 @@ public class ThreeVector {
 	}
 	
 	// The following static methods perform vector operations on two vectors
-
 	// Scalar product
 	public static double scalarProduct(ThreeVector a, ThreeVector b)	{
 		double scalarProduct = a.xc*b.xc + a.yc*b.yc + a.zc*b.zc;
@@ -84,19 +87,23 @@ public class ThreeVector {
 	}
 	
 	// Non-static versions of the static methods above
-	
+	// scalar product
 	public double scalarProduct(ThreeVector a)	{
 		return scalarProduct(this, a);
 	}
 	
+	// vector product
 	public ThreeVector vectorProduct(ThreeVector a)	{
 		return vectorProduct(this, a);
 	}
 	
+	// addition
 	public ThreeVector add(ThreeVector a)	{
 		return add(this, a);
 	}
 	
+	
+	// angle
 	public double angle(ThreeVector a)	{
 		return angle(this, a);
 	}

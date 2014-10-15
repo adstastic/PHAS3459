@@ -1,7 +1,8 @@
 package module2;
+//Written by Aditya Mukherjee for PHAS 3459 Module 2
 
 public class TestThreeVector {
-// Class to test methods of ThreeVector class
+// Class to test methods and fields of ThreeVector class
 	
 	public static void main(String[] args) {
 	// Declare three vectors
@@ -9,10 +10,10 @@ public class TestThreeVector {
 	ThreeVector v2 = new ThreeVector(5,3,2);
 	ThreeVector v3 = new ThreeVector();
 	
-	// Print their values
-	System.out.println("Vector v1: "+v1);
-	System.out.println("Vector v2: "+v2);
-	System.out.println("Vector v3: "+v3);
+	// Print the vectors
+	System.out.println("Vector v1: "+v1+"\nUnit vector v1: "+v1.unitVector());
+	System.out.println("\nVector v2: "+v2+"\nUnit vector v2: "+v2.unitVector());
+	System.out.println("\nVector v3: "+v3+"\nUnit vector v3: "+v3.unitVector());
 	System.out.println();
 	
 	// Print scalar products
@@ -35,7 +36,7 @@ public class TestThreeVector {
 	
 	// Describing what happens when toString() method is removed from ThreeVector
 	System.out.println("When the toString() method is removed from ThreeVector, all the print statements output the memory location of the objects specified.");
-	System.out.println("For example, the vector (3,4,1) is printed as 'module2.ThreeVector@26e56328' instead of '3.0,4.0,1.0'.");
+	System.out.println("For example, the vector (3,4,1) is printed as 'module2.ThreeVector@26e56328' instead of '3.0i, 4.0j, 1.0k'.");
 	}
 
 }
