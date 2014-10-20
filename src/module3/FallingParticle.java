@@ -27,7 +27,13 @@ public class FallingParticle {
 	}
 	
 	// Setters
-	public void setZ(double height) { z = height; } 
+	public void setZ(double height) throws Exception { 
+		if (height < 0) {
+			throw new IllegalArgumentException("NEG HEIGHT"); 
+		} else {
+			z = height;
+		}
+	}
 	public void setV(double velocity) { v = velocity; } 
 	
 	// Getters

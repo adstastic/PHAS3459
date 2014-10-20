@@ -16,13 +16,7 @@ public class FallingParticle {
 	public FallingParticle(double mass, double dragcoeff) { m = mass; d = dragcoeff; z = 1; }
 	
 	// Setters
-	public void setZ(double height) throws Exception { 
-		if (height < 0) {
-			throw new IllegalArgumentException("Height cannot be less than 0.");
-		} else {
-			z = height; 
-		}
-	}
+	public void setZ(double height){ z = height; }
 	public void setV(double velocity) { v = velocity; } 
 	
 	// Getters

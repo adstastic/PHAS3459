@@ -39,8 +39,24 @@ public class TestExceptions {
 				System.out.println("Drag coefficient cannot be negative!");
 			} else if (e.getMessage().equals("NEG MASS DRAG")) {
 				System.out.println("Mass and drag coefficient cannot be negative!");
-			} else {
-				System.out.println("Unknown exception.");
+			} else if (e.getMessage().equals("NEG HEIGHT")){
+				System.out.println("Height cannot be negative!");
+			}
+		}
+		
+		try {
+			FallingParticle p = new FallingParticle(0,0);
+			p.setZ(-1);
+		} catch (Exception e) {
+			System.out.println(e);
+			if (e.getMessage().equals("NEG MASS")) {
+				System.out.println("Mass cannot be negative!");
+			} else if (e.getMessage().equals("NEG DRAG")) {
+				System.out.println("Drag coefficient cannot be negative!");
+			} else if (e.getMessage().equals("NEG MASS DRAG")) {
+				System.out.println("Mass and drag coefficient cannot be negative!");
+			} else if (e.getMessage().equals("NEG HEIGHT")){
+				System.out.println("Height cannot be negative!");
 			}
 		}
 	}
