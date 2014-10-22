@@ -1,5 +1,5 @@
 package module3;
-//Written by Aditya Mukherjee for PHAS 3459 Module 2
+//Written by Aditya Mukherjee for PHAS 3459 Module 3
 
 public class Complex {
 	// Instance variables - real and imaginary parts of complex number
@@ -47,6 +47,7 @@ public class Complex {
 	public Complex normalised() throws Exception {
 		double mod = this.modulus();
 		Complex normalised = new Complex(re/mod, im/mod);
+		// If modulus of vector is 0, throw error
 		if (mod == 0) {
 			throw new IllegalArgumentException("COMPLEX NORM DIV 0");
 		}
@@ -113,6 +114,7 @@ public class Complex {
 		double a = z1.real(); double b = z1.imag(); 
 		double c = z2.real(); double d = z2.imag();
 		Complex divide = new Complex((a*c + b*d)/(Math.pow(c, 2)+Math.pow(d, 2)) , (b*c + a*d)/(Math.pow(c, 2)+Math.pow(d, 2)));
+		// If real or imaginary part of denominator is 0, throw error
 		if (c == 0 || d == 0) {
 			throw new IllegalArgumentException("COMPLEX DIV 0");
 		}

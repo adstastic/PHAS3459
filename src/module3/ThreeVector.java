@@ -1,5 +1,5 @@
 package module3;
-//Written by Aditya Mukherjee for PHAS 3459 Module 2
+//Written by Aditya Mukherjee for PHAS 3459 Module 3
 
 public class ThreeVector {
 	// Instance variables - components of vector
@@ -52,6 +52,7 @@ public class ThreeVector {
 	public ThreeVector unitVector()	throws Exception {
 		double magnitude = this.magnitude();
 		ThreeVector unitVector = new ThreeVector(xc/magnitude, yc/magnitude, zc/magnitude);
+		// Throw error if magnitude of vector is 0
 		if (magnitude == 0) {
 			throw new IllegalArgumentException("VECTOR UNIT 0");
 		} else {			
@@ -87,6 +88,7 @@ public class ThreeVector {
 		double magb = b.magnitude();
 		double dotProduct = scalarProduct(a, b);
 		double angle = Math.acos(dotProduct/(maga*magb));
+		// Throw error if magnitude of either vector is 0
 		if (maga == 0 || magb == 0) {
 			throw new IllegalArgumentException("VECTOR ANGLE 0");
 		} else {			

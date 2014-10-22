@@ -1,5 +1,5 @@
 package module3;
-//Written by Aditya Mukherjee for PHAS 3459 Module 2
+//Written by Aditya Mukherjee for PHAS 3459 Module 3
 
 public class FallingParticle {
 	// Class variables
@@ -15,6 +15,7 @@ public class FallingParticle {
 	// Constructor, accepts mass and drag coefficient of particle as arguments, default height of drop = 1 m
 	public FallingParticle(double mass, double dragcoeff) throws Exception { 
 		z = 1; 
+		// Throw errors if mass and/or drag coefficient are negative
 		if (mass < 0 && dragcoeff >= 0) {
 			throw new IllegalArgumentException("NEG MASS");
 		} else if (dragcoeff < 0 && mass >= 0) {
@@ -28,13 +29,14 @@ public class FallingParticle {
 	
 	// Setters
 	public void setZ(double height) throws Exception { 
+		// Throw error if height is negative
 		if (height < 0) {
 			throw new IllegalArgumentException("NEG HEIGHT"); 
 		} else {
-			z = height;
+			this.z = height;
 		}
 	}
-	public void setV(double velocity) { v = velocity; } 
+	public void setV(double velocity) { this.v = velocity; } 
 	
 	// Getters
 	public double getZ() { return z; }	
