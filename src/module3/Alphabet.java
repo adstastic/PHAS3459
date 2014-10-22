@@ -40,9 +40,9 @@ public class Alphabet {
 		
 		// Print contents of variables to console
 		System.out.println("Random String: "+randString);
-		System.out.println("Length: "+randString.length());
-		System.out.println("Sum of parsed characters: "+total);
-		System.out.println("Number of exceptions: "+exceptions);
+		System.out.println("Length of Random String: "+randString.length());
+		System.out.println("Sum of characters parsed into integers: "+total);
+		System.out.println("Number of exceptions thrown by Integer.parseInt(): "+exceptions);
 	}
 	
 	// Method to generate random characters

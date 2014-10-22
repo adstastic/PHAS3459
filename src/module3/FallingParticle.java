@@ -13,7 +13,7 @@ public class FallingParticle {
 	private double v;
 	
 	// Constructor, accepts mass and drag coefficient of particle as arguments, default height of drop = 1 m
-	public FallingParticle(double mass, double dragcoeff) throws Exception { 
+	public FallingParticle(double mass, double dragcoeff) throws IllegalArgumentException { 
 		z = 1; 
 		// Throw errors if mass and/or drag coefficient are negative
 		if (mass < 0 && dragcoeff >= 0) {
@@ -28,10 +28,10 @@ public class FallingParticle {
 	}
 	
 	// Setters
-	public void setZ(double height) throws Exception { 
+	public void setZ(double height) throws ArithmeticException { 
 		// Throw error if height is negative
 		if (height < 0) {
-			throw new IllegalArgumentException("NEG HEIGHT"); 
+			throw new ArithmeticException("NEG HEIGHT"); 
 		} else {
 			this.z = height;
 		}
