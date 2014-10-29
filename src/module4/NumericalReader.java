@@ -1,8 +1,11 @@
 package module4;
 import java.net.*;
 import java.io.*;
+//Written by Aditya Mukherjee for Module 4 of PHAS3549
 
 public class NumericalReader {
+// Class to read numbers from web resource and write to file
+	
 	/* Instance Variables */
 	private double minValue;
 	private double maxValue; 
@@ -56,14 +59,14 @@ public class NumericalReader {
 	}
 	
 	// BufferedReader from URL
-	public static BufferedReader brFromURL(String url) throws IOException {
+	static BufferedReader brFromURL(String url) throws IOException {
 		URL u = new URL(url);
 		BufferedReader URLReader = new BufferedReader(new InputStreamReader(u.openStream()));
 		return URLReader;
 	}
 	
 	// BufferedReader from file
-	public static BufferedReader brFromFile(String file) throws IOException {
+	static BufferedReader brFromFile(String file) throws IOException {
 		BufferedReader fileReader = new BufferedReader(new FileReader(file));
 		return fileReader;
 	}
@@ -88,13 +91,13 @@ public class NumericalReader {
 	}
 	
 	// Data analysis
-	void analyseData(String line) throws IOException, IndexOutOfBoundsException {
+	void analyseData(String s) throws IOException, IndexOutOfBoundsException {
 		
 		// Skip lines if blank or beginning with letter 
-		if (line.isEmpty() || Character.isLetter(line.charAt(0))) {} // do nothing
+		if (s.isEmpty() || Character.isLetter(s.charAt(0))) {} // do nothing
 		else {
 			// String Array to hold elements of line split into numbers 
-			String[] numberArray = line.split("\\s+"); // regex for any nonzero no. of whitespaces
+			String[] numberArray = s.split("\\s+"); // regex for any nonzero no. of whitespaces
 			
 			// Loop ends after last element in array 
 			for (int i=0; i < numberArray.length; i++) {
@@ -114,7 +117,7 @@ public class NumericalReader {
 	}
 	
 	// End analysis
-	public void analysisEnd() throws NullPointerException {
+	void analysisEnd() throws NullPointerException {
 		/* Print final values of instance variables */
 		System.out.println("Minimum value: "+minValue);
 		System.out.println("Maximum value: "+maxValue);
