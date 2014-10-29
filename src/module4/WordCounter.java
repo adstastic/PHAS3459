@@ -13,7 +13,7 @@ public class WordCounter {
 			String url = WordCounter.getStringFromKeyboard("Please enter a URL below:");
 			// Count words on URL Page
 			int wordCount = countWordsInResource(url);
-			System.out.println(wordCount); // Print number of words
+			System.out.println("Number of Words: "+wordCount); // Print number of words
 		// Catch exception for invalid URL
 		} catch (MalformedURLException m) {
 			System.out.println("Invalid URL!: "+m.getMessage());
