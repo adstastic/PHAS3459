@@ -7,7 +7,7 @@ public class TestSquareMatrix {
 
 	public static void main(String[] args) {
 		// Initialise SquareMatricies
-		SquareMatrix A = new SquareMatrix(new double[][] {{1,0,2},{3,1,0},{-3,0,-1}});
+		SquareMatrix A = new SquareMatrix(new double[][] {{1,0,2},{0,1,0},{-3,0,-1}});
 		SquareMatrix B = new SquareMatrix(new double[][] {{0,0,1},{0,1,0},{-1,0,1}});
 		SquareMatrix C = new SquareMatrix(new double[][] {{4,3},{3,2}});
 		SquareMatrix D = new SquareMatrix(new double[][] {{-2,3},{3,-4}});

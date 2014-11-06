@@ -109,7 +109,7 @@ public class SquareMatrix {
 	/* Non-static versions of arithmetic methods */
 	
 	SquareMatrix add(SquareMatrix sm) throws Exception {
-        return SquareMatrix.multiply(this, sm);
+        return SquareMatrix.add(this, sm);
     }
 	
 	SquareMatrix multiply(SquareMatrix sm) throws Exception {

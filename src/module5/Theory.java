@@ -1,5 +1,5 @@
 package module5;
-//Written by Aditya Mukherjee for PHAS 3459 Module 5
+// Written by Aditya Mukherjee for PHAS 3459 Module 5
 
 // Defines a function
 public class Theory {
