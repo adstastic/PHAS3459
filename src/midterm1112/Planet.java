@@ -1,15 +1,15 @@
 package midterm1112;
 import java.util.*;
 
-public class BPM {
+public class Planet {
 	private List<Particle> particles =  new ArrayList<Particle>();
 	private Double z;
 	
-	public BPM(Double z) {
+	public Planet(Double z) {
 		this.z = z;
 	}
 	
-	public BPM() {}
+	public Planet() {}
 
 	public List<Particle> getParticles() {
 		return particles;

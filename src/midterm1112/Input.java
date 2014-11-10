@@ -19,13 +19,13 @@ public class Input {
 		return sc;
 	}
 	
-	public static Map<Double, BPM> getData(String url) throws IOException, InputMismatchException {
-		Map<Double, BPM> beam = new TreeMap<Double, BPM>();
+	public static Map<Double, Planet> getData(String url) throws IOException, InputMismatchException {
+		Map<Double, Planet> beam = new TreeMap<Double, Planet>();
 		Scanner sc = scFromURL(url);
 		String line;
 		String[] lineArray;
 		while (sc.hasNextLine()) {
-			BPM detector = new BPM();
+			Planet detector = new Planet();
 			line = sc.nextLine().trim();
 			if (Character.isLetter(line.charAt(0))) {}	
 			else {
