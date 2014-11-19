@@ -1,10 +1,10 @@
 package module6;
-// Written by Aditya Mukherjee for PHAS 3549 Module 5
+// Written by Aditya Mukherjee for PHAS 3549 Module 5, copied to module 6
 
 // Holds a point of data with 3 values
 public class DataPoint {
 	
-	// Instance variables
+	// Instance variables, protected so accessible to subclasses
 	protected double x;
 	protected double y;
 	protected double ey;
@@ -17,7 +17,7 @@ public class DataPoint {
 	public double getY() {return y;}
 	public double getEY() {return ey;}
 	
-	// To allow printing
+	// Updated toString method
 	public String toString() {
 		return "x = "+x+", y = "+y+" +- "+ey;
 	}

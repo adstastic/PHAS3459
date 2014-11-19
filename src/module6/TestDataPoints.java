@@ -1,4 +1,5 @@
 package module6;
+// Written by Aditya Mukherjee for PHAS 3549 Module 6
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,16 +10,18 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-
+// Tests datapoint and labelleddatapoint classes
 public class TestDataPoints {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		try {
+			// New collection holding data
 			Collection datapoints = dataFromURL("http://www.hep.ucl.ac.uk/undergrad/3459/data/module6/module6-data.txt");
+			// Using iterator to iterate through datapoints collection
 			Iterator dpItr = datapoints.iterator();
 			while (dpItr.hasNext()) {
 				Object dataPoint = dpItr.next();
+				// print datapoint
 				System.out.println(dataPoint);
 			}
 			
@@ -66,7 +69,8 @@ public class TestDataPoints {
 				// Add each line to dataSet as new LabelledDataPoint
 				dataSet.add(new LabelledDataPoint(numbers[0],numbers[1], numbers[2], label));
 			} else {
-				throw new IllegalArgumentException("Input contains more than 3 values per data point."); 
+				// if input is not of valid size, throw exception
+				throw new IllegalArgumentException("Input contains more than 3 or 4 values per data point."); 
 			}
 		}
 		return dataSet;
