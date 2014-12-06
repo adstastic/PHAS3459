@@ -1,34 +1,48 @@
 package final1314;
 
+import java.util.InputMismatchException;
+
+
 public class Lifeform {
-	protected double latitude;
-	protected double longitude;
-	protected Species species;
+	protected Coordinates loc;
+	protected String species_id;
 	
-	public Lifeform(double la, double lo, Species sp) {
-		latitude = la;
-		longitude = lo;
-		species = sp;
+	public Lifeform(Coordinates coord, String sp_id) {
+		loc = coord;
+		species_id = sp_id;
 	}
 	
-	public Lifeform() {}
-
-	public double getLatitude() {
-		return latitude;
+	public static Lifeform constructFromLine(String line, String splitter, int length) throws Exception {
+		String[] lineArray = line.trim().split(splitter);
+		if (lineArray.length != length) {
+			throw new InputMismatchException("Input does not contain exactly "+length+" fields!");
+		} else {
+			double latitude = Double.parseDouble(lineArray[0]);
+			double longitude = Double.parseDouble(lineArray[1]);
+			Coordinates coord = new Coordinates(latitude, longitude);
+			String sp_id = lineArray[2];
+			if (lineArray.length == 4) {
+				int height = Integer.parseInt(lineArray[3]);				
+				return new Plant(coord, sp_id, height);
+			} else if (lineArray.length == 3) {
+				return new Animal(coord, sp_id);
+			}
+		}
+		return null;
 	}
 
-	public double getLongitude() {
-		return longitude;
+	public Coordinates getLoc() {
+		return loc;
 	}
 
-	public Species getSpecies() {
-		return species;
+	public String getSpecies_id() {
+		return species_id;
 	}
 
 	@Override
 	public String toString() {
-		return "latitude=" + latitude + ", longitude=" + longitude
-				+ ", species=" + species;
+		return "location:"+loc+", species:"+species_id;
 	}
+
 
 }
