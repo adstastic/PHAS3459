@@ -1,7 +1,6 @@
 package module6;
 //Written by Aditya Mukherjee for PHAS 3549 Module 6
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;

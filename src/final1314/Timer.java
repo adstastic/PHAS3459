@@ -8,12 +8,12 @@ public class Timer {
 	
 	public void startTimer() { 
 		this.start = System.currentTimeMillis(); 
-		System.out.println("Started...");
+		System.out.println("Started...\n");
 	}
 	
 	public void endTimer() {
 		this.end = System.currentTimeMillis();
-		System.out.println("Finished in "+runtime()+" ms.");
+		System.out.println("\nFinished in "+runtime()+" ms.");
 	}
 	
 	public long runtime() {

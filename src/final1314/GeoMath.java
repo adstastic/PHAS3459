@@ -5,15 +5,15 @@ public class GeoMath {
 	
 	public static double distance(Coordinates a, Coordinates b) {
 		double h = h(a, b);
-		double d = 2*Math.asin(Math.sqrt(h));
+		double d = 2*R*Math.asin(Math.sqrt(h));
 		return d;
 	}
 	
 	public static double h(Coordinates a, Coordinates b) {
-		double p1 = a.latitude;
-		double p2 = b.latitude;
-		double l1 = a.longitude;
-		double l2 = b.longitude;
+		double p1 = Math.toRadians(a.latitude);
+		double p2 = Math.toRadians(b.latitude);
+		double l1 = Math.toRadians(a.longitude);
+		double l2 = Math.toRadians(b.longitude);
 		double h = haversin(p2-p1) + Math.cos(p1)*Math.cos(p2)*haversin(l2-l1);
 		return h;
 	}
