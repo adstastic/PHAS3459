@@ -19,7 +19,7 @@ public class Coordinates {
 
 	@Override
 	public String toString() {
-		return latitude+", "+longitude;
+		return String.format("%-10s %-10s", latitude, longitude);
 	}
 	
 	

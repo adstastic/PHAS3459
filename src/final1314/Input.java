@@ -22,37 +22,40 @@ public class Input {
 		return sc;
 	}
 	
-	public static Collection<Lifeform> getSurvey(String url, String splitter, int length) throws Exception {
-		Collection<Lifeform> survey = new ArrayList<Lifeform>();
+	public static Collection getSurvey(String url, String splitter, int length) throws Exception {
+		Collection survey = new ArrayList();
 		Scanner sc = scFromURL(url);
-		while (sc.hasNextLine()) {
+		//int i = 0;
+		while (sc.hasNextLine() /*& i < 1*/) {
 			String line =  sc.nextLine();
+			//System.out.println(line);
 			try {
-				Lifeform lifeform = Lifeform.constructFromLine(line, splitter, length);
-				survey.add(lifeform);
+				Lifeform specimen = Lifeform.constructFromLine(line, splitter, length);
+				survey.add(specimen);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			//i++;
 		}
 		sc.close();
 		return survey;
 	}
 	
 	//  create new hashmap of methods
-	public static Map<String, Species> planetsByMethod(Map<String, Planet> exoplanets) {
-		Map<String, Method> methods = new HashMap<String, Method>();
-		// loop through each entry in exoplanets map
-		for (Entry<String, Planet> e : exoplanets.entrySet()) {
-			Planet p = e.getValue();
-			String key = p.getMethod();
-			if (methods.containsKey(key)) {
-				methods.get(key).add(p);
-			} else {
-				// add new method to methods hashmap
-				methods.put(key, new Method(key));
+	public static HashMap getSpecies(String url, String splitter, int length, String kingdom) throws Exception {
+		HashMap<String, Species> speciesList = new HashMap<String,Species>();
+		Scanner sc = scFromURL(url);
+		while (sc.hasNextLine()) {
+			String line =  sc.nextLine();
+			try {
+				Species species= Species.constructFromLine(line, splitter, length, kingdom);
+				speciesList.put(species.id, species);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
-		return methods;
+		sc.close();
+		return speciesList;
 	}
 	
 	// check input line 

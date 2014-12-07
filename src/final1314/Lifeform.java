@@ -1,9 +1,10 @@
 package final1314;
 
+import java.util.Arrays;
 import java.util.InputMismatchException;
 
 
-public class Lifeform {
+abstract class Lifeform {
 	protected Coordinates loc;
 	protected String species_id;
 	
@@ -14,6 +15,7 @@ public class Lifeform {
 	
 	public static Lifeform constructFromLine(String line, String splitter, int length) throws Exception {
 		String[] lineArray = line.trim().split(splitter);
+		//System.out.println(Arrays.toString(lineArray));
 		if (lineArray.length != length) {
 			throw new InputMismatchException("Input does not contain exactly "+length+" fields!");
 		} else {
@@ -41,7 +43,7 @@ public class Lifeform {
 
 	@Override
 	public String toString() {
-		return "location:"+loc+", species:"+species_id;
+		return String.format("%-20s %4s", loc, species_id);
 	}
 
 
