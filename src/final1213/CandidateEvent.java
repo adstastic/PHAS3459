@@ -9,8 +9,8 @@ public class CandidateEvent {
 	final double event_energy;
 	
 	public CandidateEvent(String input_channel_id, double input_energy) {
-		if (input_channel_id == "GG") {event_channel_id = ID.GG;} 
-		else if (input_channel_id == "ZZ") {event_channel_id = ID.ZZ;}
+		if (input_channel_id.equals("GG")) {event_channel_id = ID.GG;} 
+		else if (input_channel_id.equals("ZZ")) {event_channel_id = ID.ZZ;}
 		else {throw new InputMismatchException("ERROR: Invalid Channel ID. It must be either GG or ZZ.");}
 		event_energy = input_energy;
 	}
