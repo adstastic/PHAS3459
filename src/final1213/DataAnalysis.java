@@ -34,6 +34,10 @@ public class DataAnalysis {
 			Collection<CandidateEvent> ceData = Input.importCandidateEvents(higgsCandidate_URL, splitter);
 			
 			higgsBinning(ceData, GGbinData, ZZbinData);
+			double GGexp = expectedEventsInRange(120, 140, GGbinData);
+			System.out.printf("%s %.2f\n", "No. events in 120-140 GeV on channel GG:", GGexp);
+			double ZZexp = expectedEventsInRange(120, 140, ZZbinData);
+			System.out.printf("%s %.2f\n", "No. events in 120-140 GeV on channel ZZ:", ZZexp);
 			// Print all data as tables
 			/*
 			 * System.out.println("Background GG");
@@ -54,7 +58,7 @@ public class DataAnalysis {
 	}
 	
 	
-	public static void printBinList(Object[] headers, Map<Integer, Bin> data) {
+	static void printBinList(Object[] headers, Map<Integer, Bin> data) {
 		Iterator<Bin> itr = data.values().iterator();
 		Bin b = itr.next(); 
 		Object[] data_line = {b.e_low, b.e_high, b.n_background}; // Arbitrary line of data used to create String format using FormatPrinter
@@ -77,7 +81,7 @@ public class DataAnalysis {
 		fp.endTable();
 	}
 	
-	public static void printCEList(Object[] headers, Collection<CandidateEvent> data) {
+	static void printCEList(Object[] headers, Collection<CandidateEvent> data) {
 		Iterator<CandidateEvent> itr = data.iterator();
 		CandidateEvent ce = itr.next();
 		Object[] data_line = {ce.event_channel_id, ce.event_energy};
@@ -93,12 +97,15 @@ public class DataAnalysis {
 		fp.endTable();
 	}
 	
-	public static void higgsBinning(Collection<CandidateEvent> ceData, Map<Integer, Bin> GGbinData, Map<Integer, Bin> ZZbinData) throws Exception {
+	static void higgsBinning(Collection<CandidateEvent> ceData, Map<Integer, Bin> GGbinData, Map<Integer, Bin> ZZbinData) throws Exception {
 		Iterator<CandidateEvent> ceItr = ceData.iterator();
+		int imeCounter = 0; // Error counters
+		boolean imeBool = false;
+		int iaeCounter = 0;
+		boolean iaeBool = false;
 		while (ceItr.hasNext()) {
 			CandidateEvent ce = ceItr.next();
-			System.out.println(ce);
-			try {
+			try { // add Candidate Event energy to appropriate bin in appropriate channel and increment count of candidate events for that bin
 				int eventEnergy = (int) ce.event_energy;
 				if (ce.event_channel_id.equals("GG") & GGbinData.containsKey(eventEnergy)) {
 					Bin b = GGbinData.get(eventEnergy);
@@ -106,17 +113,37 @@ public class DataAnalysis {
 				} else if (ce.event_channel_id.equals("ZZ") & ZZbinData.containsKey(eventEnergy)) {
 					Bin b = ZZbinData.get(eventEnergy);
 					b.addCandidate(ce);
-				} else {
-					if (ce.event_channel_id.equals("GG") == false | ce.event_channel_id.equals("GG") == false) {
+				} else { // throw different errors depending on whether channel_id or event energy were invalid
+					//System.out.println("Invalid: "+ce); // Print invalid CandidateEvent
+					if (ce.event_channel_id.equals("GG") == false | ce.event_channel_id.equals("ZZ") == false) {
 						throw new InputMismatchException("ERROR: Candidate Event Channel ID must be either ZZ or GG!");
 					} else if (GGbinData.containsKey(eventEnergy) == false | ZZbinData.containsKey(eventEnergy) == false) {
-						throw new InputMismatchException("ERROR: Candidate Event energy must be equal >= 100 GeV and < 200 GeV");
+						throw new IllegalArgumentException("ERROR: Candidate Event energy must be equal >= 100 GeV and < 200 GeV");
 					}
 				}
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			} continue;
+			} catch (InputMismatchException ime) {
+				//System.out.println(ime.getMessage());
+				imeBool = true;
+				imeCounter++;
+			} catch (IllegalArgumentException iae) {
+				//System.out.println(ime.getMessage());
+				iaeBool = true;
+				iaeCounter++;
+			}
+			continue; // continue loop, effectively ignoring invalid CandidateEvents
 		}
+		// Check if any of the specified exceptions have been caught
+		if (imeBool == true) {System.out.println("Caught "+imeCounter+" exceptions due to invalid CandidateEvent Channel ID.");}
+		if (iaeBool == true) {System.out.println("Caught "+iaeCounter+" exceptions due to invalid Event energy.");}
+	}
+	
+	static Double expectedEventsInRange(Integer lowerBound, Integer upperBound, Map<Integer, Bin> binData) {
+		Double n = 0.0;
+		for (Integer i = lowerBound; i<upperBound; i++) {
+			Bin b = binData.get(i);
+			n += b.n_background;
+		}
+		return n;
 	}
 
 }
