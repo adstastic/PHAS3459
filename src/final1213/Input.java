@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Map;
 import java.util.Scanner;
 
 /** 
@@ -34,22 +36,21 @@ public class Input {
 	 * @return Collection<Bin>
 	 * @throws IOException
 	 */
-	public static Collection<Bin> importBackground(String url, String splitter) throws IOException {
+	public static Map<Integer, Bin> importBackground(String url, String splitter) throws IOException {
 		// Instantiate bin object and input data processing Strings
-		Collection<Bin> binList = new ArrayList<Bin>();
+		Map<Integer, Bin> binList = new HashMap<Integer, Bin>();
 		Scanner sc = scFromURL(url);
 		while (sc.hasNextLine()) {
 			String line;
 			String[] lineArray;
 			line = sc.nextLine().trim(); 
-			System.out.println(line);// trim leading and trailing whitespace
-			if (inputLineCheck(line) & sc.hasNextLine()) { // Check line for specified characteristics
+			if (inputLineCheck(line, 'M') & sc.hasNextLine()) { // Check line for specified characteristics
 				lineArray = sc.nextLine().trim().split(splitter); // Go to next line and split by splitter
 			} else {
 				lineArray = line.trim().split(splitter); // Split current line by splitter
 			}
 			Bin b = createBin(lineArray);
-			binList.add(b);
+			binList.put(b.e_low, b);
 		}
 		sc.close(); // Close scanner to prevent memory leak
 		return binList;
@@ -82,8 +83,7 @@ public class Input {
 			String line;
 			String[] lineArray;
 			line = sc.nextLine().trim(); 
-			System.out.println(line);// trim leading and trailing whitespace
-			if (inputLineCheck(line) & sc.hasNextLine()) { // Check line for specified characteristics
+			if (inputLineCheck(line, 'C') & sc.hasNextLine()) { // Check line for specified characteristics
 				lineArray = sc.nextLine().trim().split(splitter); // Go to next line and split by splitter
 			} else {
 				lineArray = line.trim().split(splitter); // Split current line by splitter
@@ -108,9 +108,9 @@ public class Input {
 	}
 	
 	// check input line 
-	private static boolean inputLineCheck(String line) {
+	private static boolean inputLineCheck(String line, char check) {
 		// check if first character of line is letter
-		if (Character.isLetterOrDigit(line.charAt(0))) {
+		if (line.charAt(0) == check) {
 			return true;
 		} else {
 			return false;
