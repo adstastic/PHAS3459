@@ -32,23 +32,28 @@ public class DataAnalysis {
 			Map<Integer, Bin> GGbinData = Input.importBackground(backgroundGG_URL, splitter);
 			Map<Integer, Bin> ZZbinData = Input.importBackground(backgroundZZ_URL, splitter);
 			Collection<CandidateEvent> ceData = Input.importCandidateEvents(higgsCandidate_URL, splitter);
+			/*
+			System.out.println("Background GG");
+			Object[] bin_headers = {"Min E.(Gev)", "Max E.(GeV)", "Expected Events", "Candidate Events"};
+			printBinList(bin_headers, GGbinData);
+			System.out.println("Background ZZ");
+			printBinList(bin_headers, ZZbinData);
+			System.out.println("Higgs Candidates");
+			Object[] ce_headers = {"Channel ID", "Event Energy(GeV)"};
+			printCEList(ce_headers, ceData);*/
 			
 			higgsBinning(ceData, GGbinData, ZZbinData);
 			double GGexp = expectedEventsInRange(120, 140, GGbinData);
-			System.out.printf("%s %.2f\n", "No. events in 120-140 GeV on channel GG:", GGexp);
+			System.out.printf("%s %.2f\n", "No. expected events in 120-140 GeV on channel GG:", GGexp);
 			double ZZexp = expectedEventsInRange(120, 140, ZZbinData);
-			System.out.printf("%s %.2f\n", "No. events in 120-140 GeV on channel ZZ:", ZZexp);
+			System.out.printf("%s %.2f\n", "No. expected events in 120-140 GeV on channel ZZ:", ZZexp);
+			double GGcan = candidateEventsInRange(120, 240, GGbinData);
+			System.out.printf("%s %.2f\n", "No. candidate events in 120-240 GeV on channel GG:", GGcan);
+			double ZZcan = candidateEventsInRange(120, 240, ZZbinData);
+			System.out.printf("%s %.2f\n", "No. candidate events in 120-240 GeV on channel ZZ:", ZZcan);
 			// Print all data as tables
-			/*
-			 * System.out.println("Background GG");
-			Object[] bin_headers = {"Min E.(Gev)", "Max E.(GeV)", "Expected Events"};
-			printBinList(bin_headers, backgroundGG);
-			System.out.println("Background ZZ");
-			printBinList(bin_headers, backgroundZZ);
-			System.out.println("Higgs Candidates");
-			Object[] ce_headers = {"Channel ID", "Event Energy(GeV)"};
-			printCEList(ce_headers, higgsCandidate);
-			*/
+			
+			
 		} catch (Exception e){
 			// Print error and stack trace
 			System.out.println(e.getMessage());
@@ -61,7 +66,7 @@ public class DataAnalysis {
 	static void printBinList(Object[] headers, Map<Integer, Bin> data) {
 		Iterator<Bin> itr = data.values().iterator();
 		Bin b = itr.next(); 
-		Object[] data_line = {b.e_low, b.e_high, b.n_background}; // Arbitrary line of data used to create String format using FormatPrinter
+		Object[] data_line = {b.e_low, b.e_high, b.n_background, b.getN_candidate()}; // Arbitrary line of data used to create String format using FormatPrinter
 		int dp = 0; // No. decimal places to be printed to console (for doubles only)
 		char sep = '|'; // Table columns seperator
 		FormattedPrinter fp = new FormattedPrinter(headers, data_line, dp, sep); 
@@ -75,7 +80,7 @@ public class DataAnalysis {
 		while (sortedItr.hasNext()) { // Iterate through sorted key list 
 			Integer bin_id = sortedItr.next(); // Get current key
 			Bin b_ = data.get(bin_id); // Get value of key (Bin object)
-			Object[] data_ = {b_.e_low, b_.e_high, b_.n_background}; // Object array of bin's fields
+			Object[] data_ = {b_.e_low, b_.e_high, b_.n_background, b_.getN_candidate()}; // Object array of bin's fields
 			fp.printData(data_); // Print bin in table format
 		}
 		fp.endTable();
@@ -118,7 +123,12 @@ public class DataAnalysis {
 					if (ce.event_channel_id.equals("GG") == false | ce.event_channel_id.equals("ZZ") == false) {
 						throw new InputMismatchException("ERROR: Candidate Event Channel ID must be either ZZ or GG!");
 					} else if (GGbinData.containsKey(eventEnergy) == false | ZZbinData.containsKey(eventEnergy) == false) {
-						throw new IllegalArgumentException("ERROR: Candidate Event energy must be equal >= 100 GeV and < 200 GeV");
+						/*if (ce.event_channel_id.equals("GG")) {
+							GGbinData.put(eventEnergy, new Bin(eventEnergy, eventEnergy+1, 0));
+						} else if (ce.event_channel_id.equals("ZZ")) {
+							ZZbinData.put(eventEnergy, new Bin(eventEnergy, eventEnergy+1, 0));
+						}*/
+						throw new IllegalArgumentException("ERROR: Existing bins only have energy range >= 100 GeV and < 200 GeV!");
 					}
 				}
 			} catch (InputMismatchException ime) {
@@ -134,7 +144,7 @@ public class DataAnalysis {
 		}
 		// Check if any of the specified exceptions have been caught
 		if (imeBool == true) {System.out.println("Caught "+imeCounter+" exceptions due to invalid CandidateEvent Channel ID.");}
-		if (iaeBool == true) {System.out.println("Caught "+iaeCounter+" exceptions due to invalid Event energy.");}
+		if (iaeBool == true) {System.out.println("Caught "+iaeCounter+" exceptions due to outlying Event energy.");}
 	}
 	
 	static Double expectedEventsInRange(Integer lowerBound, Integer upperBound, Map<Integer, Bin> binData) {
@@ -142,6 +152,19 @@ public class DataAnalysis {
 		for (Integer i = lowerBound; i<upperBound; i++) {
 			Bin b = binData.get(i);
 			n += b.n_background;
+		}
+		return n;
+	}
+	
+	static Double candidateEventsInRange(Integer lowerBound, Integer upperBound, Map<Integer, Bin> binData) {
+		Double n = 0.0;
+		for (Integer i = lowerBound; i<upperBound; i++) {
+			if (binData.containsKey(i)) {
+				Bin b = binData.get(i);
+				n += b.getN_candidate();
+			} else {
+				//System.out.println("There is no bin for "+i+"-"+(i+1)+" GeV");
+			}
 		}
 		return n;
 	}
