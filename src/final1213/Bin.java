@@ -1,10 +1,11 @@
 package final1213;
 
 public class Bin {
-	protected int e_low;
-	protected int e_high;
-	protected double n_background;
-	protected double n_candidate;
+	final int e_low;
+	final int e_high;
+	final double n_background;
+	private double n_candidate;
+	
 	
 	public Bin(int low, int high, double N) {
 		e_low = low;
@@ -14,6 +15,10 @@ public class Bin {
 	
 	public void addCandidate() {
 		n_candidate += 1;
+	}
+
+	public double getN_candidate() {
+		return n_candidate;
 	}
 	
 }
