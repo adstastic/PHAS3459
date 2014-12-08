@@ -7,47 +7,52 @@ public class FormattedPrinter {
 		protected String headerFormat;
 		protected String tableRow;
 		protected Object[] headers;
+		protected char sep;
+		protected int dp;
 		
 		public static void main(String[] args) {
 			Object[] headers = {"Hello   ","Mike   "};
 			Object[] d1 = {"Hello123", 12.2123};
 			int dp = 0;
-			FormattedPrinter fp = new FormattedPrinter(headers, d1, dp);
+			char sep = '|';
+			FormattedPrinter fp = new FormattedPrinter(headers, d1, dp, sep);
 			fp.printHeaders();
 			fp.printData(d1);
 			
 		}
 		
-		public FormattedPrinter (Object[] headers, Object[] data, int dp) {
+		public FormattedPrinter (Object[] headers, Object[] data, int dp, char sep) {
 			if (headers.length != data.length) {
 				throw new IllegalArgumentException("Column headers and number of data elements are not the same!");
 			} else if (dp < 0) {
 				throw new IllegalArgumentException("Number of decimal places cannot be negative!");
 			} else {
-				format(headers, data, dp); 
+				this.sep = sep;
+				this.dp = dp;
+				format(headers, data); 
 			}
 		}
 		
-		public void format(Object[] headers, Object[] data, int dp) {
-			StringBuilder dataFormat = new StringBuilder("| ");
-			StringBuilder headerFormat = new StringBuilder("| ");
+		public void format(Object[] headers, Object[] data) {
+			StringBuilder dataFormat = new StringBuilder(sep+" ");
+			StringBuilder headerFormat = new StringBuilder(sep+" ");
 			StringBuilder table = new StringBuilder("+");
 			this.headers = headers;
 			Double d = 0.0;
 			for (int i=0; i<data.length; i++) {
 				int length = headers[i].toString().length();
 				headerFormat.append("%-"+length);
-				headerFormat.append("s | ");
+				headerFormat.append("s "+sep+" ");
 				dataFormat.append("%-"+length);
 				System.out.println(data[i].getClass());
 				if (data[i].getClass() == d.getClass()) {
 					if (dp > 0) {
-						dataFormat.append("."+dp+"f | ");
+						dataFormat.append("."+dp+"f "+sep+" ");
 						for (int j=0; j<length+dp; j++) {
 							table.append("-");
 						}
 					} else if (dp == 0) {
-						dataFormat.append("s | ");
+						dataFormat.append("s "+sep+" ");
 						for (int j=0; j<length+2; j++) {
 							table.append("-");
 						}
@@ -56,7 +61,7 @@ public class FormattedPrinter {
 					for (int j=0; j<length+2; j++) {
 						table.append("-");
 					}
-					dataFormat.append("s | ");
+					dataFormat.append("s "+sep+" ");
 				}
 				table.append("+");
 			}

@@ -122,7 +122,7 @@ public class DataAnalysis {
 		PlantSpecies pSp1 = plantSpeciesItr.next();
 		Object[] data1 = {pSp1.name, pSp1.number, pSp1.meanHeight()};
 		int dp = 2; 
-		FormattedPrinter fp = new FormattedPrinter(headers, data1, dp);
+		FormattedPrinter fp = new FormattedPrinter(headers, data1, dp, '|');
 //		System.out.println(fp.headerFormat);
 //		System.out.println(fp.dataFormat);
 //		System.out.println(fp.tableRow);
