@@ -48,9 +48,8 @@ public class DataAnalysis {
 		} catch (Exception e){
 			// Print error and stack trace
 			System.out.println(e.getMessage());
-			e.printStackTrace();
+			e.printStackTrace(); 
 		}
-		
 		t.endTimer();
 	}
 	
@@ -94,21 +93,29 @@ public class DataAnalysis {
 		fp.endTable();
 	}
 	
-	public static void higgsBinning(Collection<CandidateEvent> ceData, Map<Integer, Bin> GGbinData, Map<Integer, Bin> ZZbinData) {
+	public static void higgsBinning(Collection<CandidateEvent> ceData, Map<Integer, Bin> GGbinData, Map<Integer, Bin> ZZbinData) throws Exception {
 		Iterator<CandidateEvent> ceItr = ceData.iterator();
 		while (ceItr.hasNext()) {
 			CandidateEvent ce = ceItr.next();
-			int eventEnergy = (int) ce.event_energy;
-			if (ce.event_channel_id.equals("GG")) {
-				Bin b = GGbinData.get(eventEnergy);
-				System.out.println(ce);
-				b.addCandidate(ce);
-			} else if (ce.event_channel_id.equals("ZZ")) {
-				Bin b = ZZbinData.get(eventEnergy);
-				b.addCandidate(ce);
-			} else {
-				throw new InputMismatchException("ERROR: Candidate Event Channel ID must be either ZZ or GG!");
-			}
+			System.out.println(ce);
+			try {
+				int eventEnergy = (int) ce.event_energy;
+				if (ce.event_channel_id.equals("GG") & GGbinData.containsKey(eventEnergy)) {
+					Bin b = GGbinData.get(eventEnergy);
+					b.addCandidate(ce);
+				} else if (ce.event_channel_id.equals("ZZ") & ZZbinData.containsKey(eventEnergy)) {
+					Bin b = ZZbinData.get(eventEnergy);
+					b.addCandidate(ce);
+				} else {
+					if (ce.event_channel_id.equals("GG") == false | ce.event_channel_id.equals("GG") == false) {
+						throw new InputMismatchException("ERROR: Candidate Event Channel ID must be either ZZ or GG!");
+					} else if (GGbinData.containsKey(eventEnergy) == false | ZZbinData.containsKey(eventEnergy) == false) {
+						throw new InputMismatchException("ERROR: Candidate Event energy must be equal >= 100 GeV and < 200 GeV");
+					}
+				}
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			} continue;
 		}
 	}
 
