@@ -117,18 +117,23 @@ public class DataAnalysis {
 	
 	// For each of the species, print the scientific name along with the number of specimens found and their mean height
 	public static void printSpeciesMeanHeight(Map<String, PlantSpecies> plantSpecies) {
-		//System.out.printf("  \n", "", "", "");
-		String leftAlignFormat = "| %-23s | %-14s | %-11.2f |%n";
-		System.out.format("+-------------------------+----------------+-------------+%n");
-		System.out.printf("| Scientific Name         | No. Specimens  | Mean height | %n");
-		System.out.format("+-------------------------+----------------+-------------+%n");
+		Object[] headers = {"Scientific Name      ", "No. Specimens", "Mean height"};
 		Iterator<PlantSpecies> plantSpeciesItr = plantSpecies.values().iterator();
+		PlantSpecies pSp1 = plantSpeciesItr.next();
+		Object[] data1 = {pSp1.name, pSp1.number, pSp1.meanHeight()};
+		int dp = 2; 
+		FormattedPrinter fp = new FormattedPrinter(headers, data1, dp);
+//		System.out.println(fp.headerFormat);
+//		System.out.println(fp.dataFormat);
+//		System.out.println(fp.tableRow);
+		fp.printHeaders();
 		while (plantSpeciesItr.hasNext()) {
 			PlantSpecies pSp = plantSpeciesItr.next();
-			System.out.format(leftAlignFormat, pSp.name, pSp.number, pSp.meanHeight());
-			//System.out.printf("%-23s %13s %13.2f\n", pSp.name, pSp.number, pSp.meanHeight());
+			Object[] data = {pSp.name, pSp.number, pSp.meanHeight()};
+			fp.printData(data);
 		}
-		System.out.format("+-------------------------+----------------+-------------+%n");
+		fp.endTable();
+		
 	}
 	
 	public static void extremeMeanHeightSpecies(Map<String, PlantSpecies> plantSpecies) {
