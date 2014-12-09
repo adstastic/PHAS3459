@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  * Analyses simluated data from 2 channels in the Higgs search of the ATLAS experiment at the LHC
@@ -29,9 +31,11 @@ public class DataAnalysis {
 			String splitter = "\\s+"; // regular expression for any number of whitespace
 			
 			// Import data from URL's into Collections
-			Map<Integer, Bin> GGbinData = Input.importBackground(backgroundGG_URL, splitter);
-			Map<Integer, Bin> ZZbinData = Input.importBackground(backgroundZZ_URL, splitter);
+			HashMap<Double, Bin> GGbinData = Input.importBackground(backgroundGG_URL, splitter);
+			HashMap<Double, Bin> ZZbinData = Input.importBackground(backgroundZZ_URL, splitter);
 			Collection<CandidateEvent> ceData = Input.importCandidateEvents(higgsCandidate_URL, splitter);
+	
+			// Print all data as tables
 			/*
 			System.out.println("Background GG");
 			Object[] bin_headers = {"Min E.(Gev)", "Max E.(GeV)", "Expected Events", "Candidate Events"};
@@ -40,18 +44,43 @@ public class DataAnalysis {
 			printBinList(bin_headers, ZZbinData);
 			System.out.println("Higgs Candidates");
 			Object[] ce_headers = {"Channel ID", "Event Energy(GeV)"};
-			printCEList(ce_headers, ceData);*/
+			printCEList(ce_headers, ceData);
+			*/
 			
-			higgsBinning(ceData, GGbinData, ZZbinData);
-			double GGexp = expectedEventsInRange(120, 140, GGbinData);
+			HashMap<Double, Bin> ggHiggsBinned = (HashMap<Double, Bin>) GGbinData.clone();
+			HashMap<Double, Bin> zzHiggsBinned = (HashMap<Double, Bin>) ZZbinData.clone();
+			higgsBinning(ceData, ggHiggsBinned, zzHiggsBinned);
+			double GGexp = expectedEventsInRange(120.0, 140.0, GGbinData);
 			System.out.printf("%s %.2f\n", "No. expected events in 120-140 GeV on channel GG:", GGexp);
-			double ZZexp = expectedEventsInRange(120, 140, ZZbinData);
+			double ZZexp = expectedEventsInRange(120.0, 140.0, ZZbinData);
 			System.out.printf("%s %.2f\n", "No. expected events in 120-140 GeV on channel ZZ:", ZZexp);
-			double GGcan = candidateEventsInRange(120, 240, GGbinData);
+			double GGcan = candidateEventsInRange(120.0, 240.0, GGbinData);
 			System.out.printf("%s %.2f\n", "No. candidate events in 120-240 GeV on channel GG:", GGcan);
-			double ZZcan = candidateEventsInRange(120, 240, ZZbinData);
+			double ZZcan = candidateEventsInRange(120.0, 240.0, ZZbinData);
 			System.out.printf("%s %.2f\n", "No. candidate events in 120-240 GeV on channel ZZ:", ZZcan);
-			// Print all data as tables
+			
+			
+			double GGLL = logLikelihood(GGbinData);
+			double ZZLL = logLikelihood(ZZbinData);
+			System.out.printf("%s %.2f\n", "Log likelihood of channel GG:", GGLL);
+			System.out.printf("%s %.2f\n", "Log likelihood of channel ZZ:", ZZLL);
+			
+			Gaussian ggGaussian = new Gaussian(100, 2);
+			Binner ggBinner = new Binner();
+			HashMap<Double, Bin> ggBins = ggBinner.createBins(100, 200, 1);
+			HashMap<Double, HashMap<Double, Bin>> ggHiggs = ggBinner.binEvents(ggBins, ggGaussian, 110.5, 179.5, 1);
+			
+			double lowestGGHiggs = lowestLL(ggHiggs, GGbinData);
+			System.out.println("Higgs Mass with lowest log likelihood for channel GG: "+lowestGGHiggs+" GeV");
+			
+			Gaussian zzGaussian = new Gaussian(6, 1);
+			Binner zzBinner = new Binner();
+			HashMap<Double, Bin> zzBins = zzBinner.createBins(100, 200, 1);
+			HashMap<Double, HashMap<Double, Bin>> zzHiggs = zzBinner.binEvents(zzBins, zzGaussian, 110.5, 179.5, 1);
+			
+			double lowestZZHiggs = lowestLL(zzHiggs, ZZbinData);
+			System.out.println("Higgs Mass with lowest log likelihood for channel ZZ: "+lowestZZHiggs+" GeV");
+			
 			
 			
 		} catch (Exception e){
@@ -62,25 +91,48 @@ public class DataAnalysis {
 		t.endTimer();
 	}
 	
+	static double lowestLL(HashMap<Double, HashMap<Double, Bin>> higgsBinListList, HashMap<Double, Bin> importBinList) {
+		double lowestLL = Double.MAX_VALUE;
+		double lowestHiggs = 0;
+		for (Entry<Double, HashMap<Double, Bin>> e : higgsBinListList.entrySet()) {
+			HashMap<Double, Bin> bins = e.getValue();
+			for (Entry<Double, Bin> binEntry : bins.entrySet()) {
+				Bin higgsBin = binEntry.getValue();
+				double key = binEntry.getKey();
+				Bin importBin = importBinList.get(key);
+				higgsBin.addBackground(importBin.getNBackground());
+			}
+			double higgsMass = e.getKey();
+			double LL = logLikelihood(bins);
+			if (LL < lowestLL) {
+				lowestLL = LL;
+				lowestHiggs = higgsMass;
+			}
+			//System.out.println("Higgs mass: "+higgsMass);
+			//System.out.println("Log likelihood: "+LL);
+			
+		}
+		return lowestHiggs;
+	}
 	
-	static void printBinList(Object[] headers, Map<Integer, Bin> data) {
+	static void printBinList(Object[] headers, Map<Double, Bin> data) {
 		Iterator<Bin> itr = data.values().iterator();
 		Bin b = itr.next(); 
-		Object[] data_line = {b.e_low, b.e_high, b.n_background, b.getN_candidate()}; // Arbitrary line of data used to create String format using FormatPrinter
+		Object[] data_line = {b.e_low, b.e_high, b.getNBackground(), b.getN_candidate()}; // Arbitrary line of data used to create String format using FormatPrinter
 		int dp = 0; // No. decimal places to be printed to console (for doubles only)
 		char sep = '|'; // Table columns seperator
 		FormattedPrinter fp = new FormattedPrinter(headers, data_line, dp, sep); 
 		fp.printHeaders(); // Print table headers 
 		// To print Map in ascending order, need to sort KeySet 
 		// KeySet is Set, Collections.sort only accepts List arguments
-		List<Integer> bins = new ArrayList<Integer>(); // Initialise new ArrayList
+		List<Double> bins = new ArrayList<Double>(); // Initialise new ArrayList
 		bins.addAll(data.keySet()); // Add all elements in Key Set to List
 		Collections.sort(bins); // Sort
-		Iterator<Integer> sortedItr = bins.iterator(); // Initialise iterator for sorted key list
+		Iterator<Double> sortedItr = bins.iterator(); // Initialise iterator for sorted key list
 		while (sortedItr.hasNext()) { // Iterate through sorted key list 
-			Integer bin_id = sortedItr.next(); // Get current key
+			Double bin_id = sortedItr.next(); // Get current key
 			Bin b_ = data.get(bin_id); // Get value of key (Bin object)
-			Object[] data_ = {b_.e_low, b_.e_high, b_.n_background, b_.getN_candidate()}; // Object array of bin's fields
+			Object[] data_ = {b_.e_low, b_.e_high, b_.getNBackground(), b_.getN_candidate()}; // Object array of bin's fields
 			fp.printData(data_); // Print bin in table format
 		}
 		fp.endTable();
@@ -102,7 +154,7 @@ public class DataAnalysis {
 		fp.endTable();
 	}
 	
-	static void higgsBinning(Collection<CandidateEvent> ceData, Map<Integer, Bin> GGbinData, Map<Integer, Bin> ZZbinData) throws Exception {
+	static void higgsBinning(Collection<CandidateEvent> ceData, Map<Double, Bin> GGbinData, Map<Double, Bin> ZZbinData) throws Exception {
 		Iterator<CandidateEvent> ceItr = ceData.iterator();
 		int imeCounter = 0; // Error counters
 		boolean imeBool = false;
@@ -111,7 +163,7 @@ public class DataAnalysis {
 		while (ceItr.hasNext()) {
 			CandidateEvent ce = ceItr.next();
 			try { // add Candidate Event energy to appropriate bin in appropriate channel and increment count of candidate events for that bin
-				int eventEnergy = (int) ce.event_energy;
+				Double eventEnergy = ce.event_energy;
 				if (ce.event_channel_id.equals("GG") & GGbinData.containsKey(eventEnergy)) {
 					Bin b = GGbinData.get(eventEnergy);
 					b.addCandidate(ce);
@@ -147,18 +199,18 @@ public class DataAnalysis {
 		if (iaeBool == true) {System.out.println("Caught "+iaeCounter+" exceptions due to outlying Event energy.");}
 	}
 	
-	static Double expectedEventsInRange(Integer lowerBound, Integer upperBound, Map<Integer, Bin> binData) {
+	static Double expectedEventsInRange(Double lowerBound, Double upperBound, Map<Double, Bin> binData) {
 		Double n = 0.0;
-		for (Integer i = lowerBound; i<upperBound; i++) {
+		for (Double i = lowerBound; i<upperBound; i++) {
 			Bin b = binData.get(i);
-			n += b.n_background;
+			n += b.getNBackground();
 		}
 		return n;
 	}
 	
-	static Double candidateEventsInRange(Integer lowerBound, Integer upperBound, Map<Integer, Bin> binData) {
+	static Double candidateEventsInRange(Double lowerBound, Double upperBound, Map<Double, Bin> binData) {
 		Double n = 0.0;
-		for (Integer i = lowerBound; i<upperBound; i++) {
+		for (Double i = lowerBound; i<upperBound; i++) {
 			if (binData.containsKey(i)) {
 				Bin b = binData.get(i);
 				n += b.getN_candidate();
@@ -169,13 +221,15 @@ public class DataAnalysis {
 		return n;
 	}
 	
-	static Double logLikelihood(Map<Integer, Bin> channelData) {
+	static Double logLikelihood(HashMap<Double, Bin> channelData) {
 		Double LL = 0.0;
 		for (Bin b : channelData.values()) {
-			Double y_i = b.n_background;
-			Double n_i = b.getN_candidate();
-			Double LL_i = (y_i - n_i) + n_i * Math.log(n_i / y_i); 
-			LL += LL_i;
+			double y_i = b.getNBackground();
+			double n_i = b.getN_candidate();
+			if (y_i != 0 & n_i !=0) {
+				Double LL_i = (y_i - n_i) + n_i * Math.log(n_i / y_i); 
+				LL += LL_i;
+			}
 		}
 		return LL;
 	}

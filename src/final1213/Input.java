@@ -36,9 +36,9 @@ public class Input {
 	 * @return Collection<Bin>
 	 * @throws IOException
 	 */
-	public static Map<Integer, Bin> importBackground(String url, String splitter) throws IOException {
+	public static HashMap<Double, Bin> importBackground(String url, String splitter) throws IOException {
 		// Instantiate bin object and input data processing Strings
-		Map<Integer, Bin> binList = new HashMap<Integer, Bin>();
+		HashMap<Double, Bin> binList = new HashMap<Double, Bin>();
 		Scanner sc = scFromURL(url);
 		while (sc.hasNextLine()) {
 			String line;
@@ -61,8 +61,8 @@ public class Input {
 		if (lineArray.length != n_inputElements) { // Check if input contains expected number of elements
 			throw new InputMismatchException("ERROR: Input does not contain "+n_inputElements+" elements! Background data must only contain: Channel ID, Event Energy(GeV).");
 		} else {
-			int e_low = Integer.parseInt(lineArray[0]);
-			int e_high = Integer.parseInt(lineArray[1]);
+			double e_low = Double.parseDouble(lineArray[0]);
+			double e_high = Double.parseDouble(lineArray[1]);
 			double n_background = Double.parseDouble(lineArray[2]);
 			Bin bin = new Bin(e_low, e_high, n_background); // Instantiate bin with inputs
 			return bin;
