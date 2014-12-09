@@ -168,5 +168,16 @@ public class DataAnalysis {
 		}
 		return n;
 	}
+	
+	static Double logLikelihood(Map<Integer, Bin> channelData) {
+		Double LL = 0.0;
+		for (Bin b : channelData.values()) {
+			Double y_i = b.n_background;
+			Double n_i = b.getN_candidate();
+			Double LL_i = (y_i - n_i) + n_i * Math.log(n_i / y_i); 
+			LL += LL_i;
+		}
+		return LL;
+	}
 
 }
