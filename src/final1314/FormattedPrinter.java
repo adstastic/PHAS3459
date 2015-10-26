@@ -11,7 +11,7 @@ public class FormattedPrinter {
 		protected int dp;
 		
 		public static void main(String[] args) {
-			Object[] headers = {"Hello   ","Mike   "};
+			Object[] headers = {"Hello   ","World   "};
 			Object[] d1 = {"Hello123", 12.2123};
 			int dp = 0;
 			char sep = '|';
